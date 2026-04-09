@@ -10,8 +10,10 @@ export default function VideoSection() {
 
   const toggleMute = () => {
     if (videoRef.current) {
-      videoRef.current.muted = !videoRef.current.muted;
-      setIsMuted(videoRef.current.muted);
+      const newMuted = !videoRef.current.muted;
+      videoRef.current.muted = newMuted;
+      setIsMuted(newMuted);
+      window.dispatchEvent(new Event(newMuted ? 'bgmusic:resume' : 'bgmusic:pause'));
     }
   };
 

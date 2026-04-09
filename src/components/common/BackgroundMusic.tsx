@@ -23,10 +23,22 @@ export default function BackgroundMusic() {
       window.removeEventListener('keydown', startPlayback);
     };
 
+    const handlePause = () => {
+      audio.pause();
+    };
+
+    const handleResume = () => {
+      if (startedRef.current) {
+        audio.play().catch(() => {});
+      }
+    };
+
     window.addEventListener('click', startPlayback);
     window.addEventListener('scroll', startPlayback);
     window.addEventListener('touchstart', startPlayback);
     window.addEventListener('keydown', startPlayback);
+    window.addEventListener('bgmusic:pause', handlePause);
+    window.addEventListener('bgmusic:resume', handleResume);
 
     return () => {
       audio.pause();
@@ -35,6 +47,8 @@ export default function BackgroundMusic() {
       window.removeEventListener('scroll', startPlayback);
       window.removeEventListener('touchstart', startPlayback);
       window.removeEventListener('keydown', startPlayback);
+      window.removeEventListener('bgmusic:pause', handlePause);
+      window.removeEventListener('bgmusic:resume', handleResume);
     };
   }, []);
 
