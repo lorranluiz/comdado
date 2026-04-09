@@ -3,6 +3,7 @@
 import Button from '@/components/ui/Button';
 import Container from '@/components/ui/Container';
 import FadeIn from '@/components/animations/FadeIn';
+import GoldenParticles from '@/components/animations/GoldenParticles';
 
 export default function HeroSection() {
   return (
@@ -13,12 +14,8 @@ export default function HeroSection() {
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-grid-pattern opacity-10" aria-hidden="true" />
       
-      {/* Animated particles/stars */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-amber-400 rounded-full animate-pulse" />
-        <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-yellow-400 rounded-full animate-pulse delay-100" />
-        <div className="absolute bottom-1/4 right-1/4 w-2 h-2 bg-amber-500 rounded-full animate-pulse delay-200" />
-      </div>
+      {/* Animated golden particles */}
+      <GoldenParticles />
       
       <Container className="relative z-10">
         <div className="max-w-4xl mx-auto text-center">
