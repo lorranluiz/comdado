@@ -13,6 +13,7 @@ export default function VideoSection() {
       const newMuted = !videoRef.current.muted;
       videoRef.current.muted = newMuted;
       setIsMuted(newMuted);
+      videoRef.current.play().catch(() => {});
       window.dispatchEvent(new Event(newMuted ? 'bgmusic:resume' : 'bgmusic:pause'));
     }
   };
