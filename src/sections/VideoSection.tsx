@@ -1,35 +1,57 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import Container from '@/components/ui/Container';
 import FadeIn from '@/components/animations/FadeIn';
 
 export default function VideoSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isMuted, setIsMuted] = useState(true);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const mutedRef = useRef(true);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    const tryPlay = () => {
-      video.play().catch(() => {});
+
+    // Ensure autoplay on mobile
+    const ensurePlay = () => {
+      if (video.paused) {
+        video.play().catch(() => {});
+      }
     };
-    tryPlay();
-    document.addEventListener('touchstart', tryPlay, { once: true });
-    return () => document.removeEventListener('touchstart', tryPlay);
+
+    video.addEventListener('loadeddata', ensurePlay);
+    document.addEventListener('touchstart', ensurePlay, { once: true, passive: true });
+    document.addEventListener('scroll', ensurePlay, { once: true, passive: true });
+
+    return () => {
+      video.removeEventListener('loadeddata', ensurePlay);
+      document.removeEventListener('touchstart', ensurePlay);
+      document.removeEventListener('scroll', ensurePlay);
+    };
   }, []);
 
-  const toggleMute = () => {
+  const toggleMute = useCallback(() => {
     const video = videoRef.current;
-    if (!video) return;
-    const newMuted = !video.muted;
-    video.muted = newMuted;
-    setIsMuted(newMuted);
-    if (!newMuted) {
+    const overlay = overlayRef.current;
+    if (!video || !overlay) return;
+
+    mutedRef.current = !mutedRef.current;
+    video.muted = mutedRef.current;
+
+    // Update overlay visually without React re-render
+    if (mutedRef.current) {
+      overlay.classList.remove('opacity-0', 'pointer-events-none');
+      overlay.classList.add('opacity-100');
+    } else {
+      overlay.classList.remove('opacity-100');
+      overlay.classList.add('opacity-0', 'pointer-events-none');
+      // Re-trigger play on unmute for mobile
       video.play().catch(() => {});
     }
-    window.dispatchEvent(new Event(newMuted ? 'bgmusic:resume' : 'bgmusic:pause'));
-  };
+
+    window.dispatchEvent(new Event(mutedRef.current ? 'bgmusic:resume' : 'bgmusic:pause'));
+  }, []);
 
   return (
     <section className="py-12 sm:py-16 md:py-20 lg:py-28 bg-gradient-to-b from-stone-900 to-stone-800 relative overflow-hidden">
@@ -54,7 +76,7 @@ export default function VideoSection() {
         <FadeIn delay={0.3} direction="up">
           <div className="max-w-4xl mx-auto px-4">
             <div
-              className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/40 ring-1 ring-amber-500/20 cursor-pointer group"
+              className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/40 ring-1 ring-amber-500/20 cursor-pointer"
               onClick={toggleMute}
             >
               <video
@@ -63,19 +85,17 @@ export default function VideoSection() {
                 loop
                 muted
                 playsInline
-                preload="auto"
                 className="w-full h-auto block"
               >
                 <source src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/videos/video.mp4`} type="video/mp4" />
               </video>
 
-              {/* Mute/Unmute overlay - always in DOM, toggle via opacity */}
+              {/* Mute overlay - manipulated via DOM, no React re-render */}
               <div
-                className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
-                  isMuted ? 'opacity-100 bg-black/20' : 'opacity-0 pointer-events-none'
-                }`}
+                ref={overlayRef}
+                className="absolute inset-0 flex items-center justify-center transition-opacity duration-300 opacity-100 bg-black/20"
               >
-                <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center transition-transform group-hover:scale-110">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-black/50 border border-white/20 flex items-center justify-center">
                   <svg
                     className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-white"
                     fill="none"
