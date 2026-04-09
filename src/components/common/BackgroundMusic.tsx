@@ -7,7 +7,8 @@ export default function BackgroundMusic() {
   const startedRef = useRef(false);
 
   useEffect(() => {
-    const audio = new Audio('/musics/music_theme.mp3');
+    const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+    const audio = new Audio(`${basePath}/musics/music_theme.mp3`);
     audio.loop = true;
     audio.volume = 0.3;
     audioRef.current = audio;

@@ -34,7 +34,7 @@ export default function VideoSection() {
                 playsInline
                 className="w-full h-auto block"
               >
-                <source src="/videos/video.mp4" type="video/mp4" />
+                <source src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/videos/video.mp4`} type="video/mp4" />
               </video>
             </div>
           </div>
