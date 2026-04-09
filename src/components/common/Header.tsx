@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useScrollPosition } from '@/hooks/useScrollPosition';
 import { cn } from '@/utils/cn';
 import Container from '../ui/Container';
@@ -41,7 +42,7 @@ export default function Header() {
             })}
             style={{ fontFamily: 'var(--font-cinzel)' }}
           >
-            🎲 ComDado
+            <Image src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/images/comdado_logo.jpeg`} alt="ComDado RPG" width={36} height={36} className="rounded-full border-2 border-amber-500/60" /> ComDado
           </Link>
 
           {/* Desktop Navigation */}

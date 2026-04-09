@@ -34,8 +34,8 @@ export default function Footer() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-6 sm:mb-8 px-4 sm:px-0">
             {/* Brand Column */}
             <div className="col-span-1 sm:col-span-2 md:col-span-1">
-              <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-amber-500" style={{ fontFamily: 'var(--font-cinzel)' }}>
-                🎲 ComDado RPG
+              <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-amber-500 flex items-center gap-2" style={{ fontFamily: 'var(--font-cinzel)' }}>
+                <img src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/images/comdado_logo.jpeg`} alt="ComDado RPG" width={40} height={40} className="rounded-full border-2 border-amber-500/60" /> ComDado RPG
               </h3>
               <p className="text-sm sm:text-base text-amber-100 mb-3 sm:mb-4">
                 Domine a arte de narrar histórias épicas.

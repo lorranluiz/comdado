@@ -22,6 +22,10 @@ const cinzel = Cinzel({
 export const metadata: Metadata = {
   title: "ComDado RPG - Domine a Arte de Narrar Histórias Épicas",
   description: "Transforme suas sessões de RPG em aventuras inesquecíveis. Aprenda a criar narrativas envolventes, personagens marcantes e campanhas que seus jogadores nunca esquecerão.",
+  icons: {
+    icon: "/comdado/images/logo-192.png",
+    apple: "/comdado/images/logo-192.png",
+  },
 };
 
 export default function RootLayout({
