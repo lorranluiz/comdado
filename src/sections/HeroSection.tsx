@@ -110,7 +110,7 @@ export default function HeroSection() {
       {/* Scroll Indicator */}
       <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 animate-bounce hidden sm:flex">
         <div className="flex flex-col items-center gap-2">
-          <span className="text-amber-300 text-xs font-semibold">Role para explorar</span>
+          <span className="text-amber-300 text-xs font-semibold"><br />Role para explorar</span>
           <svg
             className="w-5 h-5 sm:w-6 sm:h-6 text-amber-400"
             fill="none"
