@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "preview:ghpages": "NEXT_PUBLIC_BASE_PATH=/comdado npm run build && rm -rf .ghpages-preview && mkdir -p .ghpages-preview/comdado && cp -r out/* .ghpages-preview/comdado/ && npx -y serve .ghpages-preview -l 3000"
   },
   "dependencies": {
     "clsx": "^2.1.1",
