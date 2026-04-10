@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react';
 export default function BackgroundMusic() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const startedRef = useRef(false);
+  const pausedByVideoRef = useRef(false);
 
   useEffect(() => {
     const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
@@ -13,24 +14,35 @@ export default function BackgroundMusic() {
     audio.volume = 0.3;
     audioRef.current = audio;
 
-    const startPlayback = () => {
-      if (startedRef.current) return;
-      startedRef.current = true;
-      audio.play().catch(() => {});
+    const removeInteractionListeners = () => {
       window.removeEventListener('click', startPlayback);
       window.removeEventListener('scroll', startPlayback);
       window.removeEventListener('touchstart', startPlayback);
       window.removeEventListener('keydown', startPlayback);
     };
 
+    const startPlayback = () => {
+      if (startedRef.current) return;
+      if (pausedByVideoRef.current) return;
+      audio.play().then(() => {
+        startedRef.current = true;
+        removeInteractionListeners();
+      }).catch(() => {});
+    };
+
     const handlePause = () => {
+      pausedByVideoRef.current = true;
       audio.pause();
     };
 
     const handleResume = () => {
-      if (startedRef.current) {
-        audio.play().catch(() => {});
-      }
+      pausedByVideoRef.current = false;
+      audio.play().then(() => {
+        if (!startedRef.current) {
+          startedRef.current = true;
+          removeInteractionListeners();
+        }
+      }).catch(() => {});
     };
 
     window.addEventListener('click', startPlayback);
@@ -43,10 +55,7 @@ export default function BackgroundMusic() {
     return () => {
       audio.pause();
       audio.src = '';
-      window.removeEventListener('click', startPlayback);
-      window.removeEventListener('scroll', startPlayback);
-      window.removeEventListener('touchstart', startPlayback);
-      window.removeEventListener('keydown', startPlayback);
+      removeInteractionListeners();
       window.removeEventListener('bgmusic:pause', handlePause);
       window.removeEventListener('bgmusic:resume', handleResume);
     };
